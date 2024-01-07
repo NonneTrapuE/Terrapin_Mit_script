@@ -1,3 +1,5 @@
+
+
 #!/bin/bash
 
 #################################################################################################
@@ -37,22 +39,30 @@ fi
 
 
 ## Mise à jour du système
-update-crypto-policies --set DEFAULT:TERRAPIN 1&2 > /dev/null
-if [[ $? == "0"]]; then
+update-crypto-policies --set DEFAULT:TERRAPIN
+
+if [[ $? == "0" ]]; then
 
         while :
         do
-                REBOOT=read -p "La mise à jour requiert un redémarrage du système. Voulez-vous redémarrez ? [y/n]"
-                if [[ $REBOOT == "y" ]]; then
-                        reboot
-                elif [[ $REBOOT == "n" ]]; then
+                read -p "La mise à jour requiert un redémarrage du service sshd. Voulez-vous redémarrez ? [y/n]" REBOOT
+                if [[ "$REBOOT" == "y" ]]; then
+                        systemctl restart sshd
+                        exit 0
+                elif [[ "$REBOOT" == "n" ]]; then
                         echo "Redémarrage ultérieur."
                         exit 0
                 else
                         echo "Veuillez répondre par 'y' pour oui et 'n' pour non"
+                fi
         done
 else
         echo "La mise à jour n'a pas été effectuée."
         exit 2
+fi
+
+
+
+
 
 
